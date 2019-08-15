@@ -1,0 +1,22 @@
+version: "3.3"
+services:
+  db:
+    image: postgres:11.1-alpine
+    ports:
+      - "5432"
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "4000:4000"
+    volumes:
+      - .:/app
+      - elixir-artifacts:/opt/elixir_artifacts
+    depends_on:
+      - db
+    environment:
+      MIX_DEPS_PATH: "/opt/elixir_artifacts/deps"
+      MIX_BUILD_PATH: "/opt/elixir_artifacts/_build"
+volumes:
+  elixir-artifacts: {}
