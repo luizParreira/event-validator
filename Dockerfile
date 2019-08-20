@@ -7,7 +7,7 @@ ENV APP_PATH /app
 
 RUN mix local.hex --force \
   && mix local.rebar --force \
-  && apk --no-cache --update add bash alpine-sdk coreutils curl postgresql-client \
+  && apk --no-cache --update add bash alpine-sdk coreutils curl postgresql-client build-base \
   && rm -rf /var/cache/apk/* \
   && mkdir $APP_PATH
 
@@ -17,5 +17,6 @@ COPY . $APP_PATH
 WORKDIR $APP_PATH
 
 RUN mix deps.get
+RUN mix deps.compile
 
 CMD ["mix", "phx.server"]
