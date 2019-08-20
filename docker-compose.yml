@@ -5,6 +5,7 @@ services:
     ports:
       - "5432"
   api:
+    env_file: .env
     build:
       context: .
       dockerfile: Dockerfile
