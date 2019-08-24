@@ -9,5 +9,6 @@ defmodule EventValidatorWeb.Router do
     pipe_through :api
 
     resources "/event_schemas", EventSchemaController, except: [:new, :edit]
+    post "/users", UserController, :create
   end
 end
