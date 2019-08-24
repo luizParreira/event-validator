@@ -17,5 +17,6 @@ COPY . $APP_PATH
 WORKDIR $APP_PATH
 
 RUN mix deps.get
+RUN cd deps/argon2_elixir && make clean && make && cd ../.. && mix deps.compile
 
 CMD ["mix", "phx.server"]
