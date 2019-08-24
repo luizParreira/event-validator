@@ -26,6 +26,7 @@ defmodule EventValidatorWeb.UserControllerTest do
       response = json_response(conn, 201)["data"]
 
       assert %{"id" => id} = response
+      assert Map.has_key?(response, "token")
     end
 
     test "renders errors when data is invalid", %{conn: conn} do

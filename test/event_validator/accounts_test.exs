@@ -45,6 +45,9 @@ defmodule EventValidator.AccountsTest do
       assert {:ok, %User{} = user} = Accounts.create_user(@valid_attrs)
       assert user.email == "email@email.com"
 
+      assert {:ok, user} ==
+               Argon2.check_pass(user, "some encrypted_password", hash_key: :encrypted_password)
+
       assert user.name == "some name"
     end
 

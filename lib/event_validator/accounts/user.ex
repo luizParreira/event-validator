@@ -23,5 +23,12 @@ defmodule EventValidator.Accounts.User do
       ~r/^[A-Za-z0-9._%+-+']+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/,
       message: "Invalid email"
     )
+    |> put_pass_hash()
   end
+
+  defp put_pass_hash(%Ecto.Changeset{valid?: true, changes: %{password: password}} = changeset) do
+    change(changeset, Argon2.add_hash(password, hash_key: :encrypted_password))
+  end
+
+  defp put_pass_hash(changeset), do: changeset
 end
