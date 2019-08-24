@@ -16,3 +16,10 @@ config :event_validator, EventValidatorWeb.Endpoint,
 
 # Print only warnings and errors during test
 config :logger, level: :warn
+
+# Speed up tests
+config :argon2_elixir, log_rounds: 4
+
+config :event_validator, EventValidator.Guardian,
+  issuer: "validata",
+  secret_key: "secret-key"
