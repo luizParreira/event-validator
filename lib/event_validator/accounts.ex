@@ -40,7 +40,7 @@ defmodule EventValidator.Accounts do
   @doc """
   Gets a single user.
 
-  Raises `Ecto.NoResultsError` if the User does not exist.
+  Returns `{:error, :not_found} if the User does not exist.
 
   ## Examples
 
@@ -58,6 +58,48 @@ defmodule EventValidator.Accounts do
 
       nil ->
         {:error, :not_found}
+    end
+  end
+
+  @doc """
+  Gets a single user.
+
+  Returns `nil` if the User does not exist.
+
+  ## Examples
+
+      iex> get_user_by_email("some@email.com")
+      {:ok, %User{}}
+
+      iex> get_user_by_email("some-other@email.com")
+      nil
+
+  """
+  def get_user_by_email(email) do
+    Repo.get_by(User, email: email)
+  end
+
+  @doc """
+  Verify a users password and email.
+
+  Returns `{:error, :unauthorized}` if the data is not verified
+
+  ## Examples
+
+      iex> verify_user("some@email.com", "some-password")
+      {:ok, %User{}}
+
+      iex> verify_user("some-other@email.com", "password")
+      nil
+
+  """
+  def verify_user(email, password) do
+    case get_user_by_email(email) do
+      %User{} = user ->
+        Argon2.check_pass(user, password, hash_key: :encrypted_password)
+
+      nil ->
+        {:error, :unauthorized}
     end
   end
 

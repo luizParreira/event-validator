@@ -29,6 +29,23 @@ config :event_validator, EventValidator.Guardian,
   issuer: "validata",
   secret_key: System.get_env("AUTH_SECRET_KEY")
 
+config :ueberauth, Ueberauth,
+  base_path: "/auth",
+  providers: [
+    identity:
+      {Ueberauth.Strategy.Identity,
+       [
+         callback_methods: ["POST"],
+         nickname_field: :email,
+         param_nesting: "user",
+         uid_field: :email
+       ]}
+  ]
+
+config :event_validator, EventValidatorWeb.Plug.Auth.AccessPipeline,
+  module: EventValidator.Guardian,
+  error_handler: EventValidatorWeb.Plug.Auth.ErrorHandler
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"

@@ -8,11 +8,7 @@ defmodule EventValidatorWeb.UserController do
 
   def create(conn, %{"user" => user_params}) do
     with {:ok, %User{} = user} <- Accounts.create_user(user_params) do
-      {:ok, token, _} =
-        EventValidator.Guardian.encode_and_sign(user, %{type: "User"},
-          token_type: :access,
-          ttl: {2, :hours}
-        )
+      token = EventValidator.JWT.encode_token(user, %{type: "User"})
 
       conn
       |> put_status(:created)
