@@ -3,6 +3,13 @@ defmodule EventValidatorWeb.EventSchemaControllerTest do
 
   alias EventValidator.Events
   alias EventValidator.Events.EventSchema
+  alias EventValidator.JWT
+
+  @user_attrs %{
+    email: "some@email.com",
+    password: "some password",
+    name: "some name"
+  }
 
   @create_attrs %{
     name: "some name",
@@ -20,7 +27,14 @@ defmodule EventValidatorWeb.EventSchemaControllerTest do
   end
 
   setup %{conn: conn} do
-    {:ok, conn: put_req_header(conn, "accept", "application/json")}
+    {:ok, user} = EventValidator.Accounts.create_user(@user_attrs)
+    token = JWT.encode_token(user, %{})
+
+    {:ok,
+     conn:
+       conn
+       |> put_req_header("accept", "application/json")
+       |> put_req_header("authorization", "bearer: " <> token)}
   end
 
   describe "index" do
@@ -53,8 +67,15 @@ defmodule EventValidatorWeb.EventSchemaControllerTest do
   describe "update event_schema" do
     setup [:create_event_schema]
 
-    test "renders event_schema when data is valid", %{conn: conn, event_schema: %EventSchema{id: id} = event_schema} do
-      conn = put(conn, Routes.event_schema_path(conn, :update, event_schema), event_schema: @update_attrs)
+    test "renders event_schema when data is valid", %{
+      conn: conn,
+      event_schema: %EventSchema{id: id} = event_schema
+    } do
+      conn =
+        put(conn, Routes.event_schema_path(conn, :update, event_schema),
+          event_schema: @update_attrs
+        )
+
       assert %{"id" => ^id} = json_response(conn, 200)["data"]
 
       conn = get(conn, Routes.event_schema_path(conn, :show, id))
@@ -67,7 +88,11 @@ defmodule EventValidatorWeb.EventSchemaControllerTest do
     end
 
     test "renders errors when data is invalid", %{conn: conn, event_schema: event_schema} do
-      conn = put(conn, Routes.event_schema_path(conn, :update, event_schema), event_schema: @invalid_attrs)
+      conn =
+        put(conn, Routes.event_schema_path(conn, :update, event_schema),
+          event_schema: @invalid_attrs
+        )
+
       assert json_response(conn, 422)["errors"] != %{}
     end
   end
@@ -82,6 +107,23 @@ defmodule EventValidatorWeb.EventSchemaControllerTest do
       assert_error_sent 404, fn ->
         get(conn, Routes.event_schema_path(conn, :show, event_schema))
       end
+    end
+  end
+
+  describe "unauhtorized request" do
+    test "renders unauthorized json", %{conn: conn} do
+      attrs = %{
+        email: "some-other@email.com",
+        password: "some password",
+        name: "some name"
+      }
+
+      conn =
+        conn
+        |> put_req_header("authorization", "bearer: token")
+        |> post(Routes.event_schema_path(conn, :create), event_schema: attrs)
+
+      assert json_response(conn, 401)["errors"] == %{"title" => "UnauthorizedRequest"}
     end
   end
 
