@@ -19,4 +19,11 @@ defmodule EventValidatorWeb.FallbackController do
     |> put_view(EventValidatorWeb.ErrorView)
     |> render(:"404")
   end
+
+  def call(conn, {:error, :unauthorized}) do
+    conn
+    |> put_status(:unauthorized)
+    |> put_view(EventValidatorWeb.ErrorView)
+    |> render("unauthorized.json")
+  end
 end
