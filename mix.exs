@@ -20,7 +20,7 @@ defmodule EventValidator.MixProject do
   def application do
     [
       mod: {EventValidator.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :ueberauth, :ueberauth_identity]
     ]
   end
 
@@ -43,7 +43,9 @@ defmodule EventValidator.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:cors_plug, "~> 2.0"},
       {:argon2_elixir, "~> 2.0"},
-      {:guardian, "~> 1.2"}
+      {:guardian, "~> 1.2"},
+      {:ueberauth, "~> 0.6"},
+      {:ueberauth_identity, "~> 0.2"}
     ]
   end
 
