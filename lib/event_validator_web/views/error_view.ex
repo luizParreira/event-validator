@@ -17,4 +17,8 @@ defmodule EventValidatorWeb.ErrorView do
   def render("unauthorized.json", _) do
     %{errors: %{title: "UnauthorizedRequest"}}
   end
+
+  def render("bad_request.json", _) do
+    %{errors: %{title: "BadRequest"}}
+  end
 end
