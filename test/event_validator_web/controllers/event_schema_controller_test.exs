@@ -127,6 +127,14 @@ defmodule EventValidatorWeb.EventSchemaControllerTest do
     end
   end
 
+  describe "bad request" do
+    test "renders bad request when the payload is incorrect", %{conn: conn} do
+      conn = post(conn, Routes.event_schema_path(conn, :create), other: %{invalid: "payload"})
+
+      assert json_response(conn, 400)["errors"] == %{"title" => "BadRequest"}
+    end
+  end
+
   defp create_event_schema(_) do
     event_schema = fixture(:event_schema)
     {:ok, event_schema: event_schema}

@@ -38,4 +38,12 @@ defmodule EventValidatorWeb.AuthControllerTest do
       assert json_response(conn, 401)["errors"]["title"] == "UnauthorizedRequest"
     end
   end
+
+  describe "bad request" do
+    test "renders bad request when the payload is incorrect", %{conn: conn} do
+      conn = post(conn, "/auth/identity/callback", user: %{invalid: "payload"})
+
+      assert json_response(conn, 400)["errors"] == %{"title" => "BadRequest"}
+    end
+  end
 end
