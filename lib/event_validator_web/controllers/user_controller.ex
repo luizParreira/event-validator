@@ -15,4 +15,8 @@ defmodule EventValidatorWeb.UserController do
       |> render("user.json", user: user, token: token)
     end
   end
+
+  def create(_conn, _) do
+    {:error, :bad_request}
+  end
 end

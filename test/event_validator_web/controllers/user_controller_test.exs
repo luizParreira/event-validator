@@ -33,5 +33,11 @@ defmodule EventValidatorWeb.UserControllerTest do
       conn = post(conn, Routes.user_path(conn, :create), user: @invalid_attrs)
       assert json_response(conn, 422)["errors"] != %{}
     end
+
+    test "renders bad request when the payload is incorrect" do
+      conn = post(conn, Routes.user_path(conn, :create), other: %{invalid: "payload"})
+
+      assert json_response(conn, 400)["errors"] == %{"title" => "BadRequest"}
+    end
   end
 end
