@@ -7,9 +7,18 @@ defmodule EventValidatorWeb.AuthController do
 
   action_fallback EventValidatorWeb.FallbackController
 
-  def identity_callback(%{assigns: %{ueberauth_auth: auth}} = conn, _params) do
-    email = auth.uid
-    password = auth.credentials.other.password
+  def identity_callback(
+        %{assigns: %{ueberauth_auth: %{uid: nil}}},
+        _params
+      ) do
+    {:error, :bad_request}
+  end
+
+  def identity_callback(
+        %{assigns: %{ueberauth_auth: %{uid: email, credentials: credentials}}} = conn,
+        _params
+      ) do
+    password = credentials.other.password
     handle_user_conn(Accounts.verify_user(email, password), conn)
   end
 
