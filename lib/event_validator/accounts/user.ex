@@ -1,6 +1,8 @@
 defmodule EventValidator.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
+  alias EventValidator.Accounts.UserOrganization
+  alias EventValidator.Accounts.Organization
 
   schema "users" do
     field :email, :string
@@ -8,6 +10,8 @@ defmodule EventValidator.Accounts.User do
     field :name, :string
 
     field :password, :string, virtual: true
+
+    many_to_many :organizations, Organization, join_through: UserOrganization
 
     timestamps()
   end
