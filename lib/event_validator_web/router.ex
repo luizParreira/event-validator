@@ -26,5 +26,6 @@ defmodule EventValidatorWeb.Router do
     pipe_through :authenticated
 
     resources "/event_schemas", EventSchemaController, except: [:new, :edit]
+    resources "/organizations", OrganizationController, only: [:index, :create]
   end
 end

@@ -28,7 +28,8 @@ defmodule EventValidatorWeb.EventSchemaController do
   def update(conn, %{"id" => id, "event_schema" => event_schema_params}) do
     event_schema = Events.get_event_schema!(id)
 
-    with {:ok, %EventSchema{} = event_schema} <- Events.update_event_schema(event_schema, event_schema_params) do
+    with {:ok, %EventSchema{} = event_schema} <-
+           Events.update_event_schema(event_schema, event_schema_params) do
       render(conn, "show.json", event_schema: event_schema)
     end
   end

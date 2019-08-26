@@ -5,8 +5,9 @@ defmodule EventValidator.Accounts do
 
   import Ecto.Query, warn: false
   alias EventValidator.Repo
+  alias Ecto.Multi
 
-  alias EventValidator.Accounts.User
+  alias EventValidator.Accounts.{User, Organization, UserOrganization}
 
   @doc """
   Returns the list of users.
@@ -132,5 +133,116 @@ defmodule EventValidator.Accounts do
   """
   def change_user(%User{} = user) do
     User.changeset(user, %{})
+  end
+
+  @doc """
+  Returns the list of organizations based on an user_id.
+
+  ## Examples
+
+      iex> list_organizations(user_id: 10)
+      [%Organization{}, ...]
+
+  """
+  def list_organizations(user_id: user_id) do
+    case Repo.all(
+           from u in User,
+             where: u.id == ^user_id,
+             preload: [:organizations]
+         ) do
+      [user] -> user.organizations
+      [] -> []
+      nil -> []
+    end
+  end
+
+  @doc """
+  Creates a organization.
+
+  ## Examples
+
+      iex> create_organization(%{field: value})
+      {:ok, %Organization{}}
+
+      iex> create_organization(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+      iex> create_organization(%{field: value}, 10)
+      {:ok, %Organization{}}
+
+      iex> create_organization(%{field: bad_value}, 10)
+      {:error, %Ecto.Changeset{}}
+  """
+
+  def create_organization(attrs \\ %{}) do
+    %Organization{}
+    |> Organization.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  def create_organization(attrs, user_id) do
+    multi_struct =
+      Multi.new()
+      |> Multi.insert(:organization, Organization.changeset(%Organization{}, attrs))
+      |> Multi.run(:user_organization, fn _, %{organization: organization} ->
+        %UserOrganization{}
+        |> UserOrganization.changeset(%{user_id: user_id, organization_id: organization.id})
+        |> Repo.insert()
+      end)
+
+    case Repo.transaction(multi_struct) do
+      {:ok, %{organization: organization, user_organization: _user_org}} ->
+        {:ok, organization}
+
+      {:error, :user_organization, user_org_changeset, _changes_so_far} ->
+        {:error, user_org_changeset}
+
+      {:error, :organization, org_changeset, _changes_so_far} ->
+        {:error, org_changeset}
+    end
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking organization changes.
+
+  ## Examples
+
+      iex> change_organization(organization)
+      %Ecto.Changeset{source: %Organization{}}
+
+  """
+  def change_organization(%Organization{} = organization) do
+    Organization.changeset(organization, %{})
+  end
+
+  @doc """
+  Creates a user_organization.
+
+  ## Examples
+
+      iex> create_user_organization(%{field: value})
+      {:ok, %UserOrganization{}}
+
+      iex> create_user_organization(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_user_organization(attrs \\ %{}) do
+    %UserOrganization{}
+    |> UserOrganization.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking user_organization changes.
+
+  ## Examples
+
+      iex> change_user_organization(user_organization)
+      %Ecto.Changeset{source: %UserOrganization{}}
+
+  """
+  def change_user_organization(%UserOrganization{} = user_organization) do
+    UserOrganization.changeset(user_organization, %{})
   end
 end
