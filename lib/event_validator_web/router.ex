@@ -9,6 +9,10 @@ defmodule EventValidatorWeb.Router do
     plug EventValidatorWeb.Plug.Auth.AccessPipeline
   end
 
+  pipeline :projects_auth do
+    plug EventValidatorWeb.Plug.Projects.Auth
+  end
+
   scope "/", EventValidatorWeb do
     pipe_through :api
 
@@ -27,5 +31,11 @@ defmodule EventValidatorWeb.Router do
     resources "/event_schemas", EventSchemaController, except: [:new, :edit]
     resources "/organizations", OrganizationController, only: [:index, :create]
     resources "/sources", SourceController, only: [:index, :create]
+  end
+
+  scope "/", EventValidatorWeb do
+    pipe_through [:api, :projects_auth]
+
+    resources "/validate_events", ValidateEventsController, only: [:create]
   end
 end
