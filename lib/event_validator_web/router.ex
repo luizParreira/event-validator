@@ -22,10 +22,10 @@ defmodule EventValidatorWeb.Router do
   end
 
   scope "/", EventValidatorWeb do
-    pipe_through :api
-    pipe_through :authenticated
+    pipe_through [:api, :authenticated]
 
     resources "/event_schemas", EventSchemaController, except: [:new, :edit]
     resources "/organizations", OrganizationController, only: [:index, :create]
+    resources "/sources", SourceController, only: [:index, :create]
   end
 end
