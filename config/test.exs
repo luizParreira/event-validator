@@ -23,3 +23,5 @@ config :argon2_elixir, log_rounds: 4
 config :event_validator, EventValidator.Guardian,
   issuer: "validata",
   secret_key: "secret-key"
+
+config :event_validator, :project_auth, "secret-key"

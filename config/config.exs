@@ -46,6 +46,8 @@ config :event_validator, EventValidatorWeb.Plug.Auth.AccessPipeline,
   module: EventValidator.Guardian,
   error_handler: EventValidatorWeb.Plug.Auth.ErrorHandler
 
+config :event_validator, :project_auth, System.get_env("PROJECTS_SECRET_KEY")
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"
