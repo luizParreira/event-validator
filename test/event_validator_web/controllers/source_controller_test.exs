@@ -22,14 +22,14 @@ defmodule EventValidatorWeb.SourceControllerTest do
 
   @invalid_attrs %{name: nil, platform: nil}
 
-  def fixture(:source) do
+  def setup_fixture do
     {:ok, user} = Accounts.create_user(@user_attrs)
     {:ok, organization} = Accounts.create_organization(@org_attrs, user.id)
     {user, organization}
   end
 
   setup %{conn: conn} do
-    {user, organization} = fixture(:source)
+    {user, organization} = setup_fixture()
     token = JWT.encode_token(user, %{})
 
     {:ok,

@@ -2,9 +2,13 @@ defmodule EventValidator.Projects.Source do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias EventValidator.Accounts.Organization
+  alias EventValidator.Events.EventSchema
+
   schema "sources" do
     field :name, :string
-    field :organization_id, :id
+    belongs_to :organization, Organization, foreign_key: :organization_id
+    has_many :event_schemas, EventSchema
 
     timestamps()
   end
