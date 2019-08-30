@@ -22,6 +22,10 @@ config :event_validator, EventValidatorWeb.Endpoint,
   check_origin: false,
   watchers: []
 
+config :verk,
+  queues: [default: 10],
+  redis_url: {:system, "REDIS_URL", "redis://redis:6379/1"}
+
 # ## SSL Support
 #
 # In order to use HTTPS in development, a self-signed

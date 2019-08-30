@@ -45,7 +45,9 @@ defmodule EventValidator.MixProject do
       {:argon2_elixir, "~> 2.0"},
       {:guardian, "~> 1.2"},
       {:ueberauth, "~> 0.6"},
-      {:ueberauth_identity, "~> 0.2"}
+      {:ueberauth_identity, "~> 0.2"},
+      {:verk, "~> 1.0"},
+      {:ex_json_schema, "~> 0.6.1"}
     ]
   end
 

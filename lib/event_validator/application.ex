@@ -6,14 +6,16 @@ defmodule EventValidator.Application do
   use Application
 
   def start(_type, _args) do
+    import Supervisor.Spec
     # List all child processes to be supervised
     children = [
       # Start the Ecto repository
       EventValidator.Repo,
       # Start the endpoint when the application starts
-      EventValidatorWeb.Endpoint
+      EventValidatorWeb.Endpoint,
       # Starts a worker by calling: EventValidator.Worker.start_link(arg)
       # {EventValidator.Worker, arg},
+      supervisor(Verk.Supervisor, [])
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
