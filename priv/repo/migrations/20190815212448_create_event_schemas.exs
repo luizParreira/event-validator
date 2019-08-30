@@ -9,5 +9,6 @@ defmodule EventValidator.Repo.Migrations.CreateEventSchemas do
       timestamps()
     end
 
+    create index(:event_schemas, [:name])
   end
 end
