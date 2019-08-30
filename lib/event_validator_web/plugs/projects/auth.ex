@@ -2,7 +2,7 @@ defmodule EventValidatorWeb.Plug.Projects.Auth do
   import Plug.Conn
   import Phoenix.Controller, only: [put_view: 2, render: 2]
   alias EventValidator.Projects
-  alias Projects.{TokenManager, Source, SourceToken}
+  alias Projects.{TokenManager, SourceToken}
 
   defmodule Unauthorized do
     defexception message: "Could not authenticate the webhook caller, look into it"
