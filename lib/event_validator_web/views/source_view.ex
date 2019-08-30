@@ -7,6 +7,6 @@ defmodule EventValidatorWeb.SourceView do
   end
 
   def render("source.json", %{source: source, token: token}) do
-    %{data: %{id: source.id, name: source.name}}
+    %{data: %{id: source.id, name: source.name, token: token}}
   end
 end
