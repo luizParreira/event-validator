@@ -3,9 +3,9 @@ use Mix.Config
 # Configure your database
 config :event_validator, EventValidator.Repo,
   username: "postgres",
-  password: "",
+  password: "test",
   database: "event_validator_test",
-  hostname: "db",
+  hostname: "test_db",
   pool: Ecto.Adapters.SQL.Sandbox
 
 # We don't run a server during test. If one is required,
