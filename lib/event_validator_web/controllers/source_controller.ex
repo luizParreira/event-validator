@@ -6,17 +6,18 @@ defmodule EventValidatorWeb.SourceController do
 
   action_fallback EventValidatorWeb.FallbackController
 
-  def index(conn, _params) do
-    sources = Projects.list_sources()
+  def index(conn, %{"organization_id" => organization_id}) do
+    sources = Projects.list_sources(organization_id: organization_id)
     render(conn, "index.json", sources: sources)
   end
 
+  def index(_conn, _), do: {:error, :bad_request}
+
   def create(conn, %{"source" => source_params}) do
-    with {:ok, %Source{} = source} <- Projects.create_source(source_params),
-         {:ok, %SourceToken{} = source_token} <- TokenManager.encode_token(source) do
+    with {:ok, %Source{} = source} <- Projects.create_source(source_params) do
       conn
       |> put_status(:created)
-      |> render("source.json", source: source, token: source_token.token)
+      |> render("show.json", source: source)
     end
   end
 end
