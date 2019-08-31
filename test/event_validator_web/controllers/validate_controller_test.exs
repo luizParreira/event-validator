@@ -2,7 +2,7 @@ defmodule EventValidatorWeb.ValidateControllerTest do
   use EventValidatorWeb.ConnCase
 
   alias EventValidator.{Projects, Accounts, Events}
-  alias Projects.{TokenManager, SourceToken, Source}
+  alias Projects.Source
 
   @source_attrs %{
     name: "some name",
@@ -55,13 +55,12 @@ defmodule EventValidatorWeb.ValidateControllerTest do
   setup %{conn: conn} do
     Verk.Queue.clear("default")
     source = fixture(:source)
-    {:ok, %SourceToken{token: token}} = TokenManager.encode_token(source)
 
     {:ok,
      conn:
        conn
        |> put_req_header("accept", "application/json")
-       |> put_req_header("auth-token", token),
+       |> put_req_header("auth-token", source.source_token.token),
      source: source}
   end
 
