@@ -28,7 +28,7 @@ defmodule EventValidator.Projects do
     case Repo.all(
            from o in Source,
              where: o.organization_id == ^organization_id,
-             preload: [:source_token]
+             preload: [:source_token, :event_schemas]
          ) do
       [] -> []
       nil -> []
