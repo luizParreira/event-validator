@@ -4,6 +4,10 @@ services:
     image: postgres:11.1-alpine
     ports:
       - "5432"
+  redis:
+    image: redis:3.2-alpine
+    ports:
+      - "6379"
   api:
     env_file: .env
     build:
@@ -16,6 +20,7 @@ services:
       - elixir-artifacts:/opt/elixir_artifacts
     depends_on:
       - db
+      - redis
     environment:
       MIX_DEPS_PATH: "/opt/elixir_artifacts/deps"
       MIX_BUILD_PATH: "/opt/elixir_artifacts/_build"

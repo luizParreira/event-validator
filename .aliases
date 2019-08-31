@@ -1,0 +1,1 @@
+alias validata-db="docker exec -it event-validator_api_1 /usr/bin/psql --host=db -U postgres -d event_validator_dev"

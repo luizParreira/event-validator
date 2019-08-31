@@ -36,6 +36,6 @@ defmodule EventValidatorWeb.Router do
   scope "/", EventValidatorWeb do
     pipe_through [:api, :projects_auth]
 
-    resources "/validate_events", ValidateEventsController, only: [:create]
+    resources "/validate", ValidateController, only: [:create]
   end
 end

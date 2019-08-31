@@ -38,6 +38,22 @@ defmodule EventValidator.Events do
   def get_event_schema!(id), do: Repo.get!(EventSchema, id)
 
   @doc """
+  Gets a single event_schema.
+
+  Raises `Ecto.NoResultsError` if the Event schema does not exist.
+
+  ## Examples
+
+      iex> get_event_schema_by!(123)
+      %EventSchema{}
+
+      iex> get_event_schema_by!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_event_schema_by!(attrs \\ %{}), do: Repo.get_by!(EventSchema, attrs)
+
+  @doc """
   Creates a event_schema.
 
   ## Examples
