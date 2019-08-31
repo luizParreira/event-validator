@@ -20,7 +20,7 @@ defmodule EventValidatorWeb.OrganizationController do
            Accounts.create_organization(organization_params, user.id) do
       conn
       |> put_status(:created)
-      |> render("organization.json", organization: organization)
+      |> render("show.json", organization: organization)
     else
       error -> error
     end
