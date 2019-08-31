@@ -5,8 +5,9 @@ defmodule EventValidator.Projects do
 
   import Ecto.Query, warn: false
   alias EventValidator.Repo
+  alias Ecto.Multi
 
-  alias EventValidator.Projects.Source
+  alias EventValidator.Projects.{Source, TokenManager}
 
   @doc """
   Returns the list of sources.
@@ -18,7 +19,21 @@ defmodule EventValidator.Projects do
 
   """
   def list_sources do
-    Repo.all(Source)
+    Source
+    |> Repo.all()
+    |> Repo.preload([:source_token, :event_schemas])
+  end
+
+  def list_sources(organization_id: organization_id) do
+    case Repo.all(
+           from o in Source,
+             where: o.organization_id == ^organization_id,
+             preload: [:source_token]
+         ) do
+      [] -> []
+      nil -> []
+      sources -> sources
+    end
   end
 
   @doc """
@@ -54,43 +69,23 @@ defmodule EventValidator.Projects do
 
   """
   def create_source(attrs \\ %{}) do
-    %Source{}
-    |> Source.changeset(attrs)
-    |> Repo.insert()
-  end
+    multi_struct =
+      Multi.new()
+      |> Multi.insert(:source, Source.changeset(%Source{}, attrs))
+      |> Multi.run(:source_token, fn _, %{source: source} ->
+        TokenManager.encode_token(source)
+      end)
 
-  @doc """
-  Updates a source.
+    case Repo.transaction(multi_struct) do
+      {:ok, %{source: source, source_token: _source_token}} ->
+        {:ok, Repo.preload(source, [:source_token, :event_schemas])}
 
-  ## Examples
+      {:error, :source_token, source_token_changeset, _changes_so_far} ->
+        {:error, source_token_changeset}
 
-      iex> update_source(source, %{field: new_value})
-      {:ok, %Source{}}
-
-      iex> update_source(source, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def update_source(%Source{} = source, attrs) do
-    source
-    |> Source.changeset(attrs)
-    |> Repo.update()
-  end
-
-  @doc """
-  Deletes a Source.
-
-  ## Examples
-
-      iex> delete_source(source)
-      {:ok, %Source{}}
-
-      iex> delete_source(source)
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def delete_source(%Source{} = source) do
-    Repo.delete(source)
+      {:error, :source, source_changeset, _changes_so_far} ->
+        {:error, source_changeset}
+    end
   end
 
   @doc """
