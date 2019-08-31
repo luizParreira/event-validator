@@ -35,7 +35,11 @@ defmodule EventValidator.Projects do
       nil
 
   """
-  def get_source(id), do: Repo.get(Source, id)
+  def get_source(id) do
+    Source
+    |> Repo.get(id)
+    |> Repo.preload([:source_token, :event_schemas])
+  end
 
   @doc """
   Creates a source.
