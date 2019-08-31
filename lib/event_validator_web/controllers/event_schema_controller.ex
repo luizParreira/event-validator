@@ -1,15 +1,22 @@
 defmodule EventValidatorWeb.EventSchemaController do
   use EventValidatorWeb, :controller
 
-  alias EventValidator.Events
+  alias EventValidator.{Events, Projects}
   alias EventValidator.Events.EventSchema
 
   action_fallback EventValidatorWeb.FallbackController
 
-  def index(conn, _params) do
-    event_schemas = Events.list_event_schemas()
-    render(conn, "index.json", event_schemas: event_schemas)
+  def index(conn, %{"source_id" => source_id}) do
+    case Projects.get_source(source_id) do
+      source ->
+        render(conn, "index.json", event_schemas: source.event_schemas)
+
+      nil ->
+        {:error, :bad_request}
+    end
   end
+
+  def index(_conn, _), do: {:error, :bad_request}
 
   def create(conn, %{"event_schema" => event_schema_params}) do
     with {:ok, %EventSchema{} = event_schema} <- Events.create_event_schema(event_schema_params) do
