@@ -55,12 +55,10 @@ defmodule EventValidatorWeb.OrganizationControllerTest do
 
       assert json_response(conn, 200)["data"] == [
                %{
-                 "data" => %{
-                   "id" => org.id,
-                   "name" => org.name,
-                   "size" => org.size,
-                   "website" => org.website
-                 }
+                 "id" => org.id,
+                 "name" => org.name,
+                 "size" => org.size,
+                 "website" => org.website
                }
              ]
     end
