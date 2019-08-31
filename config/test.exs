@@ -5,7 +5,7 @@ config :event_validator, EventValidator.Repo,
   username: "postgres",
   password: "test",
   database: "event_validator_test",
-  hostname: "test_db",
+  hostname: "db",
   pool: Ecto.Adapters.SQL.Sandbox
 
 # We don't run a server during test. If one is required,

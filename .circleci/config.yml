@@ -3,11 +3,13 @@ jobs: # basic units of work in a run
   build: # runs not using Workflows must have a `build` job as entry point
     parallelism: 1 # run only one instance of this job in parallel
     docker: # run the steps with Docker
+      - image: redis
+
       - image: circleci/elixir:1.7.3 # ...with this image as the primary container; this is where all `steps` will run
         environment: # environment variables for primary container
           MIX_ENV: test
       - image: circleci/postgres:10.1-alpine # database image
-        name: test_db
+        name: db
         environment: # environment variables for database
           POSTGRES_USER: postgres
           POSTGRES_DB: event_validator_test
@@ -50,7 +52,11 @@ jobs: # basic units of work in a run
 
       - run: # special utility that stalls main process until DB is ready
           name: Wait for DB
-          command: dockerize -wait tcp://test_db:5432 -timeout 1m
+          command: dockerize -wait tcp://db:5432 -timeout 1m
+
+      - run:
+          name: Wait for Redis
+          command: dockerize -wait tcp://redis:6379/2 -timeout 1m
 
       - run: mix test # run all tests in project
 
