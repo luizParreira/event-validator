@@ -16,7 +16,6 @@ defmodule EventValidatorWeb.ValidateControllerTest do
   }
   @org_attrs %{
     name: "some name",
-    size: "1-10",
     website: "some website"
   }
 

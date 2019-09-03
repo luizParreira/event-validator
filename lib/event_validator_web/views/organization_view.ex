@@ -14,8 +14,7 @@ defmodule EventValidatorWeb.OrganizationView do
     %{
       id: organization.id,
       name: organization.name,
-      website: organization.website,
-      size: organization.size
+      website: organization.website
     }
   end
 end
