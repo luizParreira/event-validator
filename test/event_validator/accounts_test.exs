@@ -9,7 +9,7 @@ defmodule EventValidator.AccountsTest do
     name: "some name"
   }
 
-  @valid_org_attrs %{name: "some name", size: "1-10", website: "some website"}
+  @valid_org_attrs %{name: "some name", website: "some website"}
 
   describe "users" do
     alias EventValidator.Accounts.User
@@ -67,7 +67,7 @@ defmodule EventValidator.AccountsTest do
   describe "organizations" do
     alias EventValidator.Accounts.Organization
 
-    @invalid_attrs %{name: nil, size: nil, website: nil}
+    @invalid_attrs %{name: nil, website: nil}
 
     def organization_fixture(attrs \\ %{}) do
       {:ok, organization} =
@@ -94,7 +94,6 @@ defmodule EventValidator.AccountsTest do
                Accounts.create_organization(@valid_org_attrs)
 
       assert organization.name == "some name"
-      assert organization.size == "1-10"
       assert organization.website == "some website"
     end
 
@@ -111,7 +110,6 @@ defmodule EventValidator.AccountsTest do
       [associated_organization] = Accounts.list_organizations(user_id: user.id)
 
       assert organization.name == "some name"
-      assert organization.size == "1-10"
       assert organization.website == "some website"
       assert associated_organization == organization
     end

@@ -12,11 +12,10 @@ defmodule EventValidatorWeb.OrganizationControllerTest do
 
   @create_attrs %{
     name: "some name",
-    size: "1-10",
     website: "some website"
   }
 
-  @invalid_attrs %{name: nil, size: nil, website: nil}
+  @invalid_attrs %{name: nil, website: nil}
 
   def fixture(:organization) do
     {:ok, organization} = Accounts.create_organization(@create_attrs)
@@ -57,7 +56,6 @@ defmodule EventValidatorWeb.OrganizationControllerTest do
                %{
                  "id" => org.id,
                  "name" => org.name,
-                 "size" => org.size,
                  "website" => org.website
                }
              ]
@@ -72,14 +70,12 @@ defmodule EventValidatorWeb.OrganizationControllerTest do
 
       assert %{
                "name" => "some name",
-               "size" => "1-10",
                "website" => "some website"
              } = response
 
       [org] = Accounts.list_organizations(user_id: user.id)
       assert id == org.id
       assert "some name" == org.name
-      assert "1-10" == org.size
       assert "some website" == org.website
     end
 
