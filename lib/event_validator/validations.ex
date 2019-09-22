@@ -8,6 +8,8 @@ defmodule EventValidator.Validations do
 
   alias EventValidator.Validations.SchemaValidation
   alias EventValidator.Accounts.Organization
+  alias EventValidator.Projects.Source
+  alias EventValidator.Events.EventSchema
 
   @doc """
   Returns the list of schema_validations.
@@ -78,11 +80,12 @@ defmodule EventValidator.Validations do
   def list_schema_validations(%Organization{id: organization_id}) do
     Repo.all(
       from sv in SchemaValidation,
-        join: es in "event_schemas",
+        join: es in EventSchema,
         on: es.id == sv.event_schema_id,
-        join: s in "sources",
+        join: s in Source,
         on: s.id == es.source_id,
-        where: s.organization_id == ^organization_id
+        where: s.organization_id == ^organization_id,
+        preload: [:event_schema]
     )
   end
 end
