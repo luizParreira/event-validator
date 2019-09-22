@@ -90,11 +90,13 @@ defmodule EventValidator.ValidationsTest do
     end
 
     test "list_schema_validations/1 returns the schema_validations from a given organization" do
-      {schema_validation, organization} = schema_validation_fixture()
-      {schema_validation2, organization2} = schema_validation_fixture(%{@user_attrs | email: "other@email.com"})
+      {expected_schema_validation, organization} = schema_validation_fixture()
+      {expected_schema_validation2, organization2} = schema_validation_fixture(%{@user_attrs | email: "other@email.com"})
+      [schema_validation] = Validations.list_schema_validations(organization)
+      [schema_validation2] = Validations.list_schema_validations(organization2)
 
-      assert Validations.list_schema_validations(organization) == [schema_validation]
-      assert Validations.list_schema_validations(organization2) == [schema_validation2]
+      assert  schema_validation.id == expected_schema_validation.id
+      assert  schema_validation2.id == expected_schema_validation2.id
     end
   end
 end
