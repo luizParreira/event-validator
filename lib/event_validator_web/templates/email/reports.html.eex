@@ -1,0 +1,30 @@
+
+<p>Here's events that failed since last time:</p>
+
+<table style="border-collapse: collapse">
+  <tr>
+  <tr>
+    <th style="border-bottom: 1px solid #AAAAAA; border-right: 1px solid #AAAAAA;padding: 2px 4px;">
+      Event
+    </th>
+    <th style="border-bottom: 1px solid #AAAAAA; border-right: 1px solid #AAAAAA;padding: 2px 4px;">
+      Error
+    </th>
+    <th style="border-bottom: 1px solid #AAAAAA; border-right: 1px solid #AAAAAA;padding: 2px 4px;">
+      Error location
+    </th>
+    <th style="border-bottom: 1px solid #AAAAAA; border-bottom: 1px solid #AAAAAA;padding: 2px 4px;">
+      Error Count
+    </th>
+  </tr>
+
+  <%= Enum.map(@data, fn data -> %>
+    <tr>
+      <td style="border-top: 1px solid #AAAAAA;border-right: 1px solid #AAAAAA;border-right: 1px solid #AAAAAA;padding: 2px 4px;"><%= data.event %></td>
+      <td style="border-top: 1px solid #AAAAAA;border-right: 1px solid #AAAAAA;padding: 2px 4px;"><%= data.error_message %></td>
+      <td style="border-top: 1px solid #AAAAAA;border-right: 1px solid #AAAAAA;padding: 2px 4px;"><%= data.path %></td>
+      <td style="border-top: 1px solid #AAAAAA;padding: 2px 4px;text-align: right;"><%= data.error_count %></td>
+    </tr>
+  <% end) %>
+
+</table>
