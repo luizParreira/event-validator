@@ -36,6 +36,7 @@ defmodule EventValidator.MixProject do
       {:phoenix, "~> 1.4.9"},
       {:phoenix_pubsub, "~> 1.1"},
       {:phoenix_ecto, "~> 4.0"},
+      {:phoenix_html, "~> 2.6"},
       {:ecto_sql, "~> 3.1"},
       {:postgrex, ">= 0.0.0"},
       {:gettext, "~> 0.11"},
@@ -47,7 +48,8 @@ defmodule EventValidator.MixProject do
       {:ueberauth, "~> 0.6"},
       {:ueberauth_identity, "~> 0.2"},
       {:verk, "~> 1.0"},
-      {:ex_json_schema, "~> 0.6.1"}
+      {:ex_json_schema, "~> 0.6.1"},
+      {:bamboo, "~> 1.3"}
     ]
   end
 
