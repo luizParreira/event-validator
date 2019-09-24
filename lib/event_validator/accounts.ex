@@ -157,6 +157,26 @@ defmodule EventValidator.Accounts do
   end
 
   @doc """
+  Gets a single organization and all its sources.
+
+  Raises `Ecto.NoResultsError` if the Organization does not exist.
+
+  ## Examples
+
+      iex> get_organization!(123)
+      %Organization{}
+
+      iex> get_organization!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_organization!(id),
+    do:
+      Organization
+      |> Repo.get!(id)
+      |> Repo.preload([:sources])
+
+  @doc """
   Creates a organization.
 
   ## Examples

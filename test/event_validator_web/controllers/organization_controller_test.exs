@@ -1,7 +1,7 @@
 defmodule EventValidatorWeb.OrganizationControllerTest do
   use EventValidatorWeb.ConnCase
 
-  alias EventValidator.Accounts
+  alias EventValidator.{Accounts, Projects}
   alias EventValidator.JWT
 
   @user_attrs %{
@@ -59,6 +59,28 @@ defmodule EventValidatorWeb.OrganizationControllerTest do
                  "website" => org.website
                }
              ]
+    end
+  end
+
+  describe "show" do
+    test "show a organization", %{conn: conn, user: user} do
+      org = fixture(:organization)
+      _user_org = fixture(:user_organization, user.id, org.id)
+
+      source_attrs = %{
+        name: "some name",
+        organization_id: org.id
+      }
+
+      {:ok, source} = Projects.create_source(source_attrs)
+      conn = get(conn, Routes.organization_path(conn, :show, org.id))
+
+      assert json_response(conn, 200)["data"] == %{
+               "id" => org.id,
+               "name" => "some name",
+               "sources" => [%{"id" => source.id, "name" => "some name"}],
+               "website" => "some website"
+             }
     end
   end
 
