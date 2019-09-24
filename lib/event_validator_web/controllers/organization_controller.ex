@@ -13,6 +13,11 @@ defmodule EventValidatorWeb.OrganizationController do
     render(conn, "index.json", organizations: organizations)
   end
 
+  def show(conn, %{"id" => id}) do
+    org = Accounts.get_organization!(id)
+    render(conn, "show.json", organization: org)
+  end
+
   def create(conn, %{"organization" => organization_params}) do
     user = conn.private.guardian_default_resource
 
@@ -20,7 +25,7 @@ defmodule EventValidatorWeb.OrganizationController do
            Accounts.create_organization(organization_params, user.id) do
       conn
       |> put_status(:created)
-      |> render("show.json", organization: organization)
+      |> render("organization.json", organization: organization)
     else
       error -> error
     end
