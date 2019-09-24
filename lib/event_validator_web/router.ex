@@ -30,7 +30,7 @@ defmodule EventValidatorWeb.Router do
 
     resources "/event_schemas", EventSchemaController, except: [:new, :edit]
     resources "/organizations", OrganizationController, only: [:index, :create, :show]
-    resources "/sources", SourceController, only: [:index, :create]
+    resources "/sources", SourceController, only: [:index, :create, :show]
   end
 
   scope "/", EventValidatorWeb do

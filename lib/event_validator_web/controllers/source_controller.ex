@@ -13,6 +13,15 @@ defmodule EventValidatorWeb.SourceController do
 
   def index(_conn, _), do: {:error, :bad_request}
 
+  def show(conn, %{"id" => id}) do
+    source = Projects.get_source(id)
+
+    case source do
+      nil -> {:error, :bad_request}
+      src -> render(conn, "show_with_events.json", source: src)
+    end
+  end
+
   def create(conn, %{"source" => source_params}) do
     with {:ok, %Source{} = source} <- Projects.create_source(source_params) do
       conn
