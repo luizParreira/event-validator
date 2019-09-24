@@ -1,7 +1,7 @@
 defmodule EventValidatorWeb.SourceControllerTest do
   use EventValidatorWeb.ConnCase
 
-  alias EventValidator.{JWT, Accounts, Projects}
+  alias EventValidator.{JWT, Accounts, Projects, Events}
 
   @user_attrs %{
     email: "some@email.com",
@@ -54,6 +54,50 @@ defmodule EventValidatorWeb.SourceControllerTest do
                  "token" => source_token.token
                }
              ]
+    end
+  end
+
+  describe "show" do
+    test "show a source", %{conn: conn, organization: organization} do
+      attrs = %{@create_attrs | organization_id: organization.id}
+      {:ok, source} = Projects.create_source(attrs)
+      source_token = EventValidator.Repo.preload(source, :source_token).source_token
+
+      event_attrs = %{
+        name: "some event",
+        schema: %{},
+        source_id: source.id
+      }
+
+      event_attrs_1 = %{
+        name: "some event 1",
+        schema: %{},
+        source_id: source.id
+      }
+
+      {:ok, event_schema} = Events.create_event_schema(event_attrs)
+      {:ok, event_schema_1} = Events.create_event_schema(event_attrs_1)
+
+      conn = get(conn, Routes.source_path(conn, :show, source.id))
+
+      assert json_response(conn, 200)["data"] ==
+               %{
+                 "id" => source.id,
+                 "name" => source.name,
+                 "token" => source_token.token,
+                 "events" => [
+                   %{
+                     "id" => event_schema_1.id,
+                     "name" => "some event 1",
+                     "schema" => %{}
+                   },
+                   %{
+                     "id" => event_schema.id,
+                     "name" => "some event",
+                     "schema" => %{}
+                   }
+                 ]
+               }
     end
   end
 
