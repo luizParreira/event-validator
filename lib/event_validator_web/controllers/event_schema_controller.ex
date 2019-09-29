@@ -8,11 +8,10 @@ defmodule EventValidatorWeb.EventSchemaController do
 
   def index(conn, %{"source_id" => source_id}) do
     case Projects.get_source(source_id) do
-      source ->
-        render(conn, "index.json", event_schemas: source.event_schemas)
-
       nil ->
         {:error, :bad_request}
+      source ->
+        render(conn, "index.json", event_schemas: source.event_schemas)
     end
   end
 

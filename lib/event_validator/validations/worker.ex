@@ -1,6 +1,5 @@
 defmodule EventValidator.Validations.Worker do
   alias EventValidator.{Events, Validations}
-  alias Events.EventSchema
   alias Validations.ValidateSchema
 
   def perform(source_id, %{"event" => event_name, "type" => "track"} = params) do

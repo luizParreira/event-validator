@@ -2,7 +2,7 @@ defmodule EventValidatorWeb.SourceController do
   use EventValidatorWeb, :controller
 
   alias EventValidator.Projects
-  alias EventValidator.Projects.{Source, TokenManager, SourceToken}
+  alias EventValidator.Projects.Source
 
   action_fallback EventValidatorWeb.FallbackController
 

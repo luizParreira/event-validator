@@ -2,7 +2,6 @@ defmodule EventValidatorWeb.SourceView do
   use EventValidatorWeb, :view
   alias EventValidatorWeb.{SourceView, EventSchemaView}
   alias EventValidator.Projects.{Source, SourceToken}
-  alias EventValidator.Events.EventSchema
 
   def render("index.json", %{sources: sources}) do
     %{data: render_many(sources, SourceView, "source.json")}
