@@ -51,7 +51,8 @@ defmodule EventValidatorWeb.SourceControllerTest do
                %{
                  "id" => source.id,
                  "name" => source.name,
-                 "token" => source_token.token
+                 "token" => source_token.token,
+                 "events" => []
                }
              ]
     end
