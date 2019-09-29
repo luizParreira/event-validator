@@ -11,7 +11,8 @@ defmodule EventValidatorWeb.OrganizationView do
             %{
               id: organization.id,
               name: organization.name,
-              website: organization.website
+              website: organization.website,
+              sources: []
             }
           end
         )
@@ -19,22 +20,15 @@ defmodule EventValidatorWeb.OrganizationView do
   end
 
   def render("show.json", %{organization: organization}) do
+    organization =
+      EventValidator.Repo.preload(organization, sources: [:source_token, :event_schemas])
+
     %{
       data: %{
         id: organization.id,
         name: organization.name,
         website: organization.website,
         sources: render_many(organization.sources, SourceView, "source.json")
-      }
-    }
-  end
-
-  def render("organization.json", %{organization: organization}) do
-    %{
-      data: %{
-        id: organization.id,
-        name: organization.name,
-        website: organization.website
       }
     }
   end

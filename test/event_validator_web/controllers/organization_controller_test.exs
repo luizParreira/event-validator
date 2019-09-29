@@ -56,7 +56,8 @@ defmodule EventValidatorWeb.OrganizationControllerTest do
                %{
                  "id" => org.id,
                  "name" => org.name,
-                 "website" => org.website
+                 "website" => org.website,
+                 "sources" => []
                }
              ]
     end
@@ -78,7 +79,14 @@ defmodule EventValidatorWeb.OrganizationControllerTest do
       assert json_response(conn, 200)["data"] == %{
                "id" => org.id,
                "name" => "some name",
-               "sources" => [%{"id" => source.id, "name" => "some name"}],
+               "sources" => [
+                 %{
+                   "id" => source.id,
+                   "name" => "some name",
+                   "token" => source.source_token.token,
+                   "events" => []
+                 }
+               ],
                "website" => "some website"
              }
     end

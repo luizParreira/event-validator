@@ -18,7 +18,7 @@ defmodule EventValidatorWeb.SourceController do
 
     case source do
       nil -> {:error, :bad_request}
-      src -> render(conn, "show_with_events.json", source: src)
+      src -> render(conn, "show.json", source: src)
     end
   end
 
