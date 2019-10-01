@@ -136,6 +136,40 @@ defmodule EventValidator.Accounts do
   end
 
   @doc """
+  Sets a reset_password_token and sends an email to the user containing the token if it exists
+
+  ## Examples
+
+      iex> reset_user_password("existent@email.com")
+      {:ok}
+
+      iex> reset_user_password("inexistent@email.com")
+      {:error, :not_found}
+
+  """
+  def reset_user_password(email) do
+    case get_user_by_email(email) do
+      nil ->
+        {:error, :not_found}
+
+      user ->
+        user |> set_reset_password_token
+        {:ok}
+    end
+  end
+
+  defp set_reset_password_token(user) do
+    token =
+      :crypto.strong_rand_bytes(50)
+      |> Base.url_encode64()
+      |> binary_part(0, 50)
+
+    user
+    |> User.changeset(%{reset_password_token: token})
+    |> Repo.update()
+  end
+
+  @doc """
   Returns the list of organizations based on an user_id.
 
   ## Examples

@@ -8,6 +8,7 @@ defmodule EventValidator.Accounts.User do
     field :email, :string
     field :encrypted_password, :string
     field :name, :string
+    field :reset_password_token, :string
 
     field :password, :string, virtual: true
 
@@ -19,6 +20,7 @@ defmodule EventValidator.Accounts.User do
   @doc false
   def changeset(user, attrs) do
     user
+    |> cast(attrs, [:name, :email, :password, :reset_password_token])
     |> validate_required([:name, :email])
     |> validate_password
     |> unique_constraint(:email)

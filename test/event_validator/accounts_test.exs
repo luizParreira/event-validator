@@ -62,6 +62,20 @@ defmodule EventValidator.AccountsTest do
       user = user_fixture()
       assert %Ecto.Changeset{} = Accounts.change_user(user)
     end
+
+    test "reset_user_password/1 sets an reset password token if it exists with that email" do
+      email = "email@validata.app"
+      user = user_fixture(email: email)
+
+      assert Accounts.reset_user_password(email) == {:ok}
+      assert Accounts.get_user!(user.id).reset_password_token != nil
+    end
+
+    test "reset_user_password/1 returns {:error, :not_found} when couldn't found the user by email" do
+      email = "inexistent@validata.app"
+
+      assert Accounts.reset_user_password(email) == {:error, :not_found}
+    end
   end
 
   describe "organizations" do
