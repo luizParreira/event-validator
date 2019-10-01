@@ -17,6 +17,7 @@ defmodule EventValidatorWeb.Router do
     pipe_through :api
 
     post "/users", UserController, :create
+    post "/reset_password", PasswordsController, :reset_password
   end
 
   scope "/auth", EventValidatorWeb do
