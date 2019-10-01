@@ -19,8 +19,8 @@ defmodule EventValidator.Accounts.User do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:name, :email, :password])
-    |> validate_required([:name, :email, :password])
+    |> validate_required([:name, :email])
+    |> validate_password
     |> unique_constraint(:email)
     |> validate_format(
       :email,
@@ -35,4 +35,10 @@ defmodule EventValidator.Accounts.User do
   end
 
   defp put_pass_hash(changeset), do: changeset
+
+  defp validate_password(%Ecto.Changeset{valid?: true, changes: %{encrypted_password: nil}} = changeset) do
+    changeset|> validate_required([:password])
+  end
+
+  defp validate_password(changeset), do: changeset
 end
