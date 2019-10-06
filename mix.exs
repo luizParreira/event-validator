@@ -48,7 +48,7 @@ defmodule EventValidator.MixProject do
       {:ueberauth, "~> 0.6"},
       {:ueberauth_identity, "~> 0.2"},
       {:verk, "~> 1.0"},
-      {:ex_json_schema, "~> 0.6.1"},
+      {:ex_json_schema, "~> 0.6.2"},
       {:bamboo, "~> 1.3"}
     ]
   end
