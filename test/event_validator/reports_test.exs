@@ -55,7 +55,7 @@ defmodule EventValidator.ReportsTest do
   }
 
   @schema_validation_attrs %{
-    valid: true,
+    valid: false,
     event_schema_id: nil,
     event_params: @params
   }
@@ -64,7 +64,7 @@ defmodule EventValidator.ReportsTest do
     {:ok, user} = Accounts.create_user(user_attrs)
     {:ok, organization} = Accounts.create_organization(@org_attrs, user.id)
 
-    {:ok, %Source{id: id}} =
+    {:ok, %Source{id: id} = source} =
       Projects.create_source(%{@source_attrs | organization_id: organization.id})
 
     {:ok, event_schema_a} =
@@ -109,37 +109,45 @@ defmodule EventValidator.ReportsTest do
         event_params: %{}
     })
 
-    organization
+    {organization, source, event_schema_a, event_schema_b}
   end
 
   test "event_validation_report/1 returns the report structure for a given organization" do
-    organization = schema_validation_fixture()
+    {organization, source, event_schema_a, event_schema_b} = schema_validation_fixture()
 
     assert EventValidator.Reports.event_validation_report(organization) == [
-      %EventValidator.Reports.Error{
-        error_count: 2,
-        error_message: "Required properties event, properties were not present.",
-        event: "Click Buy A",
-        path: "#"
-      },
-      %EventValidator.Reports.Error{
-        error_count: 1,
-        error_message: "Required property source was not present.",
-        event: "Click Buy A",
-        path: "#/properties"
-      },
-      %EventValidator.Reports.Error{
-        error_count: 1,
-        error_message: "Required properties event, properties were not present.",
-        event: "Click Buy B",
-        path: "#"
-      },
-      %EventValidator.Reports.Error{
-        error_count: 1,
-        error_message: "Required property source was not present.",
-        event: "Click Buy B",
-        path: "#/properties"
-      }
-    ]
+             %EventValidator.Reports.Error{
+               event_schema_id: event_schema_a.id,
+               source_id: source.id,
+               error_count: 2,
+               error_message: "Required properties event, properties were not present.",
+               event: "Click Buy A",
+               path: "#"
+             },
+             %EventValidator.Reports.Error{
+               event_schema_id: event_schema_a.id,
+               source_id: source.id,
+               error_count: 1,
+               error_message: "Required property source was not present.",
+               event: "Click Buy A",
+               path: "#/properties"
+             },
+             %EventValidator.Reports.Error{
+               event_schema_id: event_schema_b.id,
+               source_id: source.id,
+               error_count: 1,
+               error_message: "Required properties event, properties were not present.",
+               event: "Click Buy B",
+               path: "#"
+             },
+             %EventValidator.Reports.Error{
+               event_schema_id: event_schema_b.id,
+               source_id: source.id,
+               error_count: 1,
+               error_message: "Required property source was not present.",
+               event: "Click Buy B",
+               path: "#/properties"
+             }
+           ]
   end
 end
