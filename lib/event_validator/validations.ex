@@ -77,7 +77,16 @@ defmodule EventValidator.Validations do
     |> Repo.insert!()
   end
 
-  def list_schema_validations(%Organization{id: organization_id}) do
+  @doc """
+  Returns the list of all invalid schema validations
+
+  ## Examples
+
+      iex> list_failed_schema_validations(%Organization{})
+      [%SchemaValidation{}, ...]
+
+  """
+  def list_failed_schema_validations(%Organization{id: organization_id}) do
     Repo.all(
       from sv in SchemaValidation,
         join: es in EventSchema,
@@ -85,6 +94,7 @@ defmodule EventValidator.Validations do
         join: s in Source,
         on: s.id == es.source_id,
         where: s.organization_id == ^organization_id,
+        where: sv.valid == false,
         preload: [:event_schema]
     )
   end
