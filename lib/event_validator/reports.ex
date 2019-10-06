@@ -4,12 +4,19 @@ defmodule EventValidator.Reports do
   alias EventValidator.Accounts.Organization
 
   defmodule Error do
-    defstruct [:event, :error_message, :path, :error_count]
+    defstruct [
+      :event,
+      :error_message,
+      :path,
+      :error_count,
+      :event_schema_id,
+      :source_id
+    ]
   end
 
   def event_validation_report(%Organization{} = organization) do
     organization
-    |> Validations.list_schema_validations()
+    |> Validations.list_failed_schema_validations()
     |> Enum.flat_map(fn event_validation ->
       case Validator.validate(event_validation.event_schema.schema, event_validation.event_params) do
         :ok -> []
@@ -26,6 +33,8 @@ defmodule EventValidator.Reports do
         [{error_message, path}] = error_text
 
         %Error{
+          event_schema_id: event_schema.id,
+          source_id: event_schema.source_id,
           event: event_schema.name,
           error_message: error_message,
           path: path,
