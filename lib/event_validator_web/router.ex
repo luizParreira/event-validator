@@ -29,6 +29,7 @@ defmodule EventValidatorWeb.Router do
     pipe_through [:api, :authenticated]
 
     resources "/event_schemas", EventSchemaController, except: [:new, :edit]
+    get "/validations", ValidationsController, :index
     resources "/organizations", OrganizationController, only: [:index, :create, :show]
     resources "/sources", SourceController, only: [:index, :create, :show]
   end
