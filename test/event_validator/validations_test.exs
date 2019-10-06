@@ -40,12 +40,12 @@ defmodule EventValidator.ValidationsTest do
     }
 
     @schema_validation_attrs %{
-      valid: true,
+      valid: false,
       event_schema_id: nil,
       event_params: @params
     }
 
-    def schema_validation_fixture(user_attrs \\ @user_attrs) do
+    def schema_validation_fixture(user_attrs, schema_attrs) do
       {:ok, user} = Accounts.create_user(user_attrs)
       {:ok, organization} = Accounts.create_organization(@org_attrs, user.id)
 
@@ -61,7 +61,7 @@ defmodule EventValidator.ValidationsTest do
 
       {:ok, schema_validation} =
         Validations.create_schema_validation(%{
-          @schema_validation_attrs
+          schema_attrs
           | event_schema_id: event_schema.id
         })
 
@@ -69,20 +69,21 @@ defmodule EventValidator.ValidationsTest do
     end
 
     test "list_schema_validations/0 returns all schema_validations" do
-      {schema_validation, _} = schema_validation_fixture()
+      {schema_validation, _} = schema_validation_fixture(@user_attrs, @schema_validation_attrs)
       assert Validations.list_schema_validations() == [schema_validation]
     end
 
     test "get_schema_validation!/1 returns the schema_validation with given id" do
-      {schema_validation, _} = schema_validation_fixture()
+      {schema_validation, _} = schema_validation_fixture(@user_attrs, @schema_validation_attrs)
       assert Validations.get_schema_validation!(schema_validation.id) == schema_validation
     end
 
     test "create_schema_validation/1 with valid data creates a schema_validation" do
-      assert {%SchemaValidation{} = schema_validation, _} = schema_validation_fixture()
+      assert {%SchemaValidation{} = schema_validation, _} =
+               schema_validation_fixture(@user_attrs, @schema_validation_attrs)
 
       assert schema_validation.event_params == @params
-      assert schema_validation.valid == true
+      assert schema_validation.valid == false
     end
 
     test "create_schema_validation/1 with invalid data returns error changeset" do
@@ -90,13 +91,27 @@ defmodule EventValidator.ValidationsTest do
     end
 
     test "list_schema_validations/1 returns the schema_validations from a given organization" do
-      {expected_schema_validation, organization} = schema_validation_fixture()
-      {expected_schema_validation2, organization2} = schema_validation_fixture(%{@user_attrs | email: "other@email.com"})
-      [schema_validation] = Validations.list_schema_validations(organization)
-      [schema_validation2] = Validations.list_schema_validations(organization2)
+      {expected_schema_validation, organization} =
+        schema_validation_fixture(@user_attrs, @schema_validation_attrs)
 
-      assert  schema_validation.id == expected_schema_validation.id
-      assert  schema_validation2.id == expected_schema_validation2.id
+      {expected_schema_validation2, organization2} =
+        schema_validation_fixture(
+          %{@user_attrs | email: "other@email.com"},
+          @schema_validation_attrs
+        )
+
+      {_expected_schema_validation3, organization3} =
+        schema_validation_fixture(%{@user_attrs | email: "even_other@email.com"}, %{
+          @schema_validation_attrs
+          | valid: true
+        })
+
+      [schema_validation] = Validations.list_failed_schema_validations(organization)
+      [schema_validation2] = Validations.list_failed_schema_validations(organization2)
+
+      assert schema_validation.id == expected_schema_validation.id
+      assert schema_validation2.id == expected_schema_validation2.id
+      assert Validations.list_failed_schema_validations(organization3) == []
     end
   end
 end
