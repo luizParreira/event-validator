@@ -20,7 +20,14 @@ defmodule EventValidator.MixProject do
   def application do
     [
       mod: {EventValidator.Application, []},
-      extra_applications: [:logger, :runtime_tools, :ueberauth, :ueberauth_identity]
+      extra_applications: [
+        :logger,
+        :runtime_tools,
+        :ueberauth,
+        :ueberauth_identity,
+        :verk,
+        :verk_web
+      ]
     ]
   end
 
@@ -48,6 +55,7 @@ defmodule EventValidator.MixProject do
       {:ueberauth, "~> 0.6"},
       {:ueberauth_identity, "~> 0.2"},
       {:verk, "~> 1.0"},
+      {:verk_web, "~> 1.0"},
       {:ex_json_schema, "~> 0.6.2"},
       {:bamboo, "~> 1.3"}
     ]
