@@ -80,6 +80,25 @@ defmodule EventValidator.Accounts do
     Repo.get_by(User, email: email)
   end
 
+
+  @doc """
+  Gets a single user based on their reset password token
+
+  Returns `{:error, :not_found}` if the User with the given does not exist.
+
+  ## Examples
+
+      iex> get_user_by_reset_password_token("some-token")
+      %User{}
+
+      iex> get_user_by_reset_password_token("inexistent-token")
+      nil
+
+  """
+  def get_user_by_reset_password_token(token) do
+    Repo.get_by(User, reset_password_token: token)
+  end
+
   @doc """
   Verify a users password and email.
 

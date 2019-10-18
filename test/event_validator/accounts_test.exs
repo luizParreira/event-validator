@@ -76,6 +76,17 @@ defmodule EventValidator.AccountsTest do
 
       assert Accounts.reset_user_password(email) == {:error, :not_found}
     end
+
+    test "get_user_by_reset_password_token/1 returns an user for a given reset password token" do
+      token = "valid-token"
+      user = user_fixture(reset_password_token: token)
+
+      assert Accounts.get_user_by_reset_password_token(token) == user
+    end
+
+    test "get_user_by_reset_password_token/1 returns not found error when no user" do
+      assert Accounts.get_user_by_reset_password_token("inexistent-token") == nil
+    end
   end
 
   describe "organizations" do
