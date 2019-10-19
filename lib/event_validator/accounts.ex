@@ -155,6 +155,23 @@ defmodule EventValidator.Accounts do
   end
 
   @doc """
+  Updates user attributes for the given params
+
+  ## Examples
+    iex> Accounts.update_user(user, %{name: "John"})
+    {:ok, %User{}}
+
+    iex> Accounts.update_user(user, %{name: nil})
+    {:error, %Ecto.Changeset{}}
+
+  """
+  def update_user(user, params) do
+    user
+    |> User.changeset(params)
+    |> Repo.update()
+  end
+
+  @doc """
   Sets a reset_password_token and sends an email to the user containing the token if it exists
 
   ## Examples
