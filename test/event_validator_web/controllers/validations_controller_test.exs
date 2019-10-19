@@ -57,6 +57,7 @@ defmodule EventValidatorWeb.ValidationsControllerTest do
   @event_schema_attrs %{
     name: "some name",
     schema: @valid_schema,
+    confirmed: true,
     source_id: nil
   }
 

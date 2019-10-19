@@ -56,7 +56,8 @@ defmodule EventValidator.ValidationsTest do
         Events.create_event_schema(%{
           name: "Click Buy",
           source_id: id,
-          schema: %{"json" => "schema"}
+          schema: %{"json" => "schema"},
+          confirmed: true
         })
 
       {:ok, schema_validation} =

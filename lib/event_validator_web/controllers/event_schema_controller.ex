@@ -18,7 +18,8 @@ defmodule EventValidatorWeb.EventSchemaController do
   def index(_conn, _), do: {:error, :bad_request}
 
   def create(conn, %{"event_schema" => event_schema_params}) do
-    with {:ok, %EventSchema{} = event_schema} <- Events.create_event_schema(event_schema_params) do
+    with {:ok, %EventSchema{} = event_schema} <-
+           Events.create_event_schema(Map.merge(event_schema_params, %{"confirmed" => true})) do
       conn
       |> put_status(:created)
       |> put_resp_header("location", Routes.event_schema_path(conn, :show, event_schema))
