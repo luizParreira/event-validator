@@ -11,5 +11,17 @@ defmodule EventValidatorWeb.PasswordsController do
       {:error, :not_found} -> send_resp(conn, 404, "")
     end
   end
-end
 
+  def update(conn, %{"token" => token, "password" => password}) do
+    case Accounts.get_user_by_reset_password_token(token) do
+      nil ->
+        send_resp(conn, 404, "")
+
+      user ->
+        case Accounts.update_user(user, %{password: password}) do
+          {:ok, _} -> send_resp(conn, 201, "")
+          {:error, _} -> send_resp(conn, 400, "Error while updating the user")
+        end
+    end
+  end
+end

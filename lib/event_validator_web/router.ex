@@ -18,6 +18,7 @@ defmodule EventValidatorWeb.Router do
 
     post "/users", UserController, :create
     post "/reset_password", PasswordsController, :reset_password
+    post "/passwords", PasswordsController, :update
   end
 
   scope "/auth", EventValidatorWeb do
