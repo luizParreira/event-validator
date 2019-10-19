@@ -29,17 +29,17 @@ defmodule EventValidator.Reports do
     |> Enum.flat_map(fn {event_schema, errors_list} ->
       errors_list
       |> Enum.group_by(fn {_, error} -> error end)
-      |> Enum.map(fn {error_text, errors} ->
-        [{error_message, path}] = error_text
-
-        %Error{
-          event_schema_id: event_schema.id,
-          source_id: event_schema.source_id,
-          event: event_schema.name,
-          error_message: error_message,
-          path: path,
-          error_count: Enum.count(errors)
-        }
+      |> Enum.flat_map(fn {error_text, errors} ->
+        Enum.map(error_text, fn {error_message, path} ->
+          %Error{
+            event_schema_id: event_schema.id,
+            source_id: event_schema.source_id,
+            event: event_schema.name,
+            error_message: error_message,
+            path: path,
+            error_count: Enum.count(errors)
+          }
+        end)
       end)
     end)
   end
