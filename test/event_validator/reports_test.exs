@@ -71,7 +71,8 @@ defmodule EventValidator.ReportsTest do
       Events.create_event_schema(%{
         name: "Click Buy A",
         source_id: id,
-        schema: @schema
+        schema: @schema,
+        confirmed: true
       })
 
     Validations.create_schema_validation(%{
@@ -95,7 +96,8 @@ defmodule EventValidator.ReportsTest do
       Events.create_event_schema(%{
         name: "Click Buy B",
         source_id: id,
-        schema: @schema
+        schema: @schema,
+        confirmed: true
       })
 
     Validations.create_schema_validation(%{

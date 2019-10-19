@@ -13,7 +13,8 @@ defmodule EventValidatorWeb.EventSchemaControllerTest do
   @create_attrs %{
     name: "some name",
     schema: %{},
-    source_id: nil
+    source_id: nil,
+    confirmed: true
   }
 
   @source_attrs %{

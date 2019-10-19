@@ -67,13 +67,15 @@ defmodule EventValidatorWeb.SourceControllerTest do
       event_attrs = %{
         name: "some event",
         schema: %{},
-        source_id: source.id
+        source_id: source.id,
+        confirmed: true
       }
 
       event_attrs_1 = %{
         name: "some event 1",
         schema: %{},
-        source_id: source.id
+        source_id: source.id,
+        confirmed: true
       }
 
       {:ok, event_schema} = Events.create_event_schema(event_attrs)

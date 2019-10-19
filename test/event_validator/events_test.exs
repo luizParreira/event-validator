@@ -6,7 +6,7 @@ defmodule EventValidator.EventsTest do
   describe "event_schemas" do
     alias EventValidator.Events.EventSchema
 
-    @event_schema_attrs %{name: "some name", schema: %{}, source_id: nil}
+    @event_schema_attrs %{name: "some name", schema: %{}, source_id: nil, confirmed: false}
     @update_attrs %{name: "some updated name", schema: %{}}
     @invalid_attrs %{name: nil, schema: nil, source_id: nil}
 

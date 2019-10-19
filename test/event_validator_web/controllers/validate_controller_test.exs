@@ -45,7 +45,8 @@ defmodule EventValidatorWeb.ValidateControllerTest do
       Events.create_event_schema(%{
         name: "Click Buy",
         source_id: id,
-        schema: %{"json" => "schema"}
+        schema: %{"json" => "schema"},
+        confirmed: true
       })
 
     source
