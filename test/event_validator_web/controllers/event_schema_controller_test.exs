@@ -27,11 +27,6 @@ defmodule EventValidatorWeb.EventSchemaControllerTest do
     website: "some website"
   }
 
-  @update_attrs %{
-    name: "some updated name",
-    schema: %{}
-  }
-
   @invalid_attrs %{name: nil, schema: nil, source_id: nil}
 
   def setup_fixture do
@@ -91,41 +86,6 @@ defmodule EventValidatorWeb.EventSchemaControllerTest do
 
     test "renders errors when data is invalid", %{conn: conn} do
       conn = post(conn, Routes.event_schema_path(conn, :create), event_schema: @invalid_attrs)
-      assert json_response(conn, 422)["errors"] != %{}
-    end
-  end
-
-  describe "update event_schema" do
-    test "renders event_schema when data is valid", %{
-      conn: conn,
-      source: source
-    } do
-      %EventSchema{id: id} = event_schema = fixture(:event_schema, source)
-
-      conn =
-        put(conn, Routes.event_schema_path(conn, :update, event_schema),
-          event_schema: @update_attrs
-        )
-
-      assert %{"id" => ^id} = json_response(conn, 200)["data"]
-
-      conn = get(conn, Routes.event_schema_path(conn, :show, id))
-
-      assert %{
-               "id" => id,
-               "name" => "some updated name",
-               "schema" => %{}
-             } = json_response(conn, 200)["data"]
-    end
-
-    test "renders errors when data is invalid", %{conn: conn, source: source} do
-      event_schema = fixture(:event_schema, source)
-
-      conn =
-        put(conn, Routes.event_schema_path(conn, :update, event_schema),
-          event_schema: @invalid_attrs
-        )
-
       assert json_response(conn, 422)["errors"] != %{}
     end
   end

@@ -10,6 +10,7 @@ defmodule EventValidatorWeb.EventSchemaController do
     case Projects.get_source(source_id) do
       nil ->
         {:error, :bad_request}
+
       source ->
         render(conn, "index.json", event_schemas: source.event_schemas)
     end
@@ -34,15 +35,6 @@ defmodule EventValidatorWeb.EventSchemaController do
   def show(conn, %{"id" => id}) do
     event_schema = Events.get_event_schema!(id)
     render(conn, "show.json", event_schema: event_schema)
-  end
-
-  def update(conn, %{"id" => id, "event_schema" => event_schema_params}) do
-    event_schema = Events.get_event_schema!(id)
-
-    with {:ok, %EventSchema{} = event_schema} <-
-           Events.update_event_schema(event_schema, event_schema_params) do
-      render(conn, "show.json", event_schema: event_schema)
-    end
   end
 
   def delete(conn, %{"id" => id}) do
