@@ -54,6 +54,22 @@ defmodule EventValidator.Events do
   def get_event_schema_by!(attrs \\ %{}), do: Repo.get_by!(EventSchema, attrs)
 
   @doc """
+  Gets a single event_schema.
+
+  Return `nil` if the Event schema does not exist.
+
+  ## Examples
+
+      iex> get_event_schema_by(123)
+      %EventSchema{}
+
+      iex> get_event_schema_by(456)
+      nil
+
+  """
+  def get_event_schema_by(attrs \\ %{}), do: Repo.get_by(EventSchema, attrs)
+
+  @doc """
   Creates a event_schema.
 
   ## Examples
@@ -116,5 +132,17 @@ defmodule EventValidator.Events do
   """
   def change_event_schema(%EventSchema{} = event_schema) do
     EventSchema.changeset(event_schema, %{})
+  end
+
+  def infer_event_schema(params, source_id) do
+    event_name = params["event"]
+    schema = EventValidator.Events.InferSchema.infer(%{"event_params" => params})
+
+    create_event_schema(%{
+      name: event_name,
+      source_id: source_id,
+      schema: schema,
+      confirmed: false
+    })
   end
 end
