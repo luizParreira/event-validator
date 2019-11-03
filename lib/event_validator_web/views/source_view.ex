@@ -11,13 +11,14 @@ defmodule EventValidatorWeb.SourceView do
   end
 
   def render("source.json", %{source: source}) do
-    source = EventValidator.Repo.preload(source, [:source_token, :event_schemas])
+    events = EventValidator.Events.list_event_schemas(source.id)
+    source = EventValidator.Repo.preload(source, [:source_token])
 
     %{
       id: source.id,
       name: source.name,
       token: source.source_token.token,
-      events: render_many(source.event_schemas, EventSchemaView, "event_schema.json")
+      events: render_many(events, EventSchemaView, "event_schema.json")
     }
   end
 end

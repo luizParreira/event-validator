@@ -41,6 +41,8 @@ defmodule EventValidatorWeb.ValidateControllerTest do
     {:ok, %Source{id: id} = source} =
       Projects.create_source(%{@source_attrs | organization_id: organization.id})
 
+    source = EventValidator.Repo.preload(source, [:source_token])
+
     {:ok, _event_schema} =
       Events.create_event_schema(%{
         name: "Click Buy",

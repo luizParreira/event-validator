@@ -21,14 +21,12 @@ defmodule EventValidator.Projects do
   def list_sources do
     Source
     |> Repo.all()
-    |> Repo.preload([:source_token, :event_schemas])
   end
 
   def list_sources(organization_id: organization_id) do
     case Repo.all(
            from o in Source,
-             where: o.organization_id == ^organization_id,
-             preload: [:source_token, :event_schemas]
+             where: o.organization_id == ^organization_id
          ) do
       [] -> []
       nil -> []
@@ -50,11 +48,8 @@ defmodule EventValidator.Projects do
       nil
 
   """
-  def get_source(id) do
-    Source
-    |> Repo.get(id)
-    |> Repo.preload([:source_token, :event_schemas])
-  end
+  def get_source(id),
+    do: Repo.get(Source, id)
 
   @doc """
   Creates a source.
@@ -78,7 +73,7 @@ defmodule EventValidator.Projects do
 
     case Repo.transaction(multi_struct) do
       {:ok, %{source: source, source_token: _source_token}} ->
-        {:ok, Repo.preload(source, [:source_token, :event_schemas])}
+        {:ok, source}
 
       {:error, :source_token, source_token_changeset, _changes_so_far} ->
         {:error, source_token_changeset}

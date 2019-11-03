@@ -132,20 +132,28 @@ defmodule EventValidatorWeb.ValidationsControllerTest do
 
       assert json_response(conn, 200)["data"] == [
                %{
-                 "event_schema_id" => schema.id,
-                 "source_id" => source.id,
                  "error_count" => 1,
                  "error_message" => "Required properties anonymousId, price were not present.",
                  "event" => "some name",
+                 "event_schema_id" => schema.id,
+                 "path" => "#/properties",
+                 "source_id" => source.id
+               },
+               %{
+                 "error_count" => 1,
+                 "event" => "some name",
+                 "event_schema_id" => schema.id,
+                 "source_id" => source.id,
+                 "error_message" => "Required property anonymousId was not present.",
                  "path" => "#/properties"
                },
                %{
-                 "event_schema_id" => schema.id,
-                 "source_id" => source.id,
                  "error_count" => 1,
                  "error_message" => "Required property properties was not present.",
                  "event" => "some name",
-                 "path" => "#"
+                 "event_schema_id" => schema.id,
+                 "path" => "#",
+                 "source_id" => source.id
                }
              ]
     end

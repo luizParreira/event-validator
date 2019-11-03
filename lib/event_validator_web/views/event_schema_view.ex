@@ -11,8 +11,11 @@ defmodule EventValidatorWeb.EventSchemaView do
   end
 
   def render("event_schema.json", %{event_schema: event_schema}) do
-    %{id: event_schema.id,
+    %{
+      id: event_schema.id,
       name: event_schema.name,
-      schema: event_schema.schema}
+      confirmed: event_schema.confirmed,
+      schema: event_schema.schema
+    }
   end
 end
