@@ -74,6 +74,7 @@ defmodule EventValidatorWeb.OrganizationControllerTest do
       }
 
       {:ok, source} = Projects.create_source(source_attrs)
+      source = EventValidator.Repo.preload(source, [:source_token])
       conn = get(conn, Routes.organization_path(conn, :show, org.id))
 
       assert json_response(conn, 200)["data"] == %{

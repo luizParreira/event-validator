@@ -145,4 +145,24 @@ defmodule EventValidator.Events do
       confirmed: false
     })
   end
+
+  def get_event_schema(source_id, name) do
+    event_schemas =
+      Repo.all(
+        from es in EventSchema,
+          where: es.source_id == ^source_id and es.name == ^name,
+          order_by: [desc: es.inserted_at]
+      )
+
+    Enum.at(event_schemas, 0)
+  end
+
+  def list_event_schemas(source_id) do
+    Repo.all(
+      from es in EventSchema,
+        where: es.source_id == ^source_id,
+        distinct: es.name,
+        order_by: [desc: es.id]
+    )
+  end
 end

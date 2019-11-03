@@ -82,19 +82,24 @@ defmodule EventValidator.Validations do
 
   ## Examples
 
-      iex> list_failed_schema_validations(%Organization{})
+      iex> list_schema_validations(%Organization{})
       [%SchemaValidation{}, ...]
 
   """
-  def list_failed_schema_validations(%Organization{id: organization_id}) do
+  def list_schema_validations(%Organization{id: organization_id}) do
+    sub =
+      from es in EventSchema,
+        group_by: [es.id, es.name],
+        distinct: es.name,
+        order_by: [desc: es.id]
+
     Repo.all(
       from sv in SchemaValidation,
-        join: es in EventSchema,
+        join: es in subquery(sub),
         on: es.id == sv.event_schema_id,
         join: s in Source,
         on: s.id == es.source_id,
         where: s.organization_id == ^organization_id,
-        where: sv.valid == false,
         preload: [:event_schema]
     )
   end

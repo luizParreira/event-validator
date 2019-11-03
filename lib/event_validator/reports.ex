@@ -16,11 +16,14 @@ defmodule EventValidator.Reports do
 
   def event_validation_report(%Organization{} = organization) do
     organization
-    |> Validations.list_failed_schema_validations()
+    |> Validations.list_schema_validations()
     |> Enum.flat_map(fn event_validation ->
       case Validator.validate(event_validation.event_schema.schema, event_validation.event_params) do
-        :ok -> []
-        {:error, error} -> [{event_validation, error}]
+        :ok ->
+          []
+
+        {:error, error} ->
+          [{event_validation, error}]
       end
     end)
     |> Enum.group_by(fn {event_validation, _} ->

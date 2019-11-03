@@ -51,6 +51,26 @@ defmodule EventValidator.EventsTest do
       assert Events.list_event_schemas() == [event_schema]
     end
 
+    test "list_event_schemas/1 returns latest event_schemas given source_id based on distinct name" do
+      source = setup_fixture()
+      params = %{@event_schema_attrs | source_id: source.id}
+      {:ok, _event_schema} = Events.create_event_schema(params)
+      {:ok, event_schema_0} = Events.create_event_schema(params)
+      {:ok, _event_schema_b} = Events.create_event_schema(%{params | name: "other_name"})
+      {:ok, event_schema_b_0} = Events.create_event_schema(%{params | name: "other_name"})
+
+      assert Events.list_event_schemas(source.id) == [event_schema_b_0, event_schema_0]
+    end
+
+    test "get_event_schema/2 returns the event_schema with given source_id and name" do
+      source = setup_fixture()
+      params = %{@event_schema_attrs | source_id: source.id}
+      {:ok, _event_schema} = Events.create_event_schema(params)
+      {:ok, event_schema_0} = Events.create_event_schema(params)
+
+      assert Events.get_event_schema(source.id, "some name") == event_schema_0
+    end
+
     test "get_event_schema!/1 returns the event_schema with given id" do
       event_schema = event_schema_fixture()
       assert Events.get_event_schema!(event_schema.id) == event_schema

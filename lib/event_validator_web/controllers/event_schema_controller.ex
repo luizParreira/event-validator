@@ -12,7 +12,7 @@ defmodule EventValidatorWeb.EventSchemaController do
         {:error, :bad_request}
 
       source ->
-        render(conn, "index.json", event_schemas: source.event_schemas)
+        render(conn, "index.json", event_schemas: Events.list_event_schemas(source_id))
     end
   end
 

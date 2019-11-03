@@ -2,7 +2,6 @@ defmodule EventValidatorWeb.EventSchemaControllerTest do
   use EventValidatorWeb.ConnCase
 
   alias EventValidator.{Events, Accounts, Projects, JWT}
-  alias Events.EventSchema
 
   @user_attrs %{
     email: "some@email.com",
@@ -55,13 +54,17 @@ defmodule EventValidatorWeb.EventSchemaControllerTest do
 
   describe "index" do
     test "lists all event_schemas", %{conn: conn, source: source} do
-      {:ok, schema} = Events.create_event_schema(%{@create_attrs | source_id: source.id})
+      {:ok, _schema} = Events.create_event_schema(%{@create_attrs | source_id: source.id})
       {:ok, schema2} = Events.create_event_schema(%{@create_attrs | source_id: source.id})
       conn = get(conn, Routes.event_schema_path(conn, :index, %{source_id: source.id}))
 
       assert json_response(conn, 200)["data"] == [
-               %{"id" => schema2.id, "name" => schema2.name, "schema" => schema2.schema},
-               %{"id" => schema.id, "name" => schema.name, "schema" => schema.schema}
+               %{
+                 "id" => schema2.id,
+                 "name" => "some name",
+                 "schema" => %{},
+                 "confirmed" => true
+               }
              ]
     end
   end
@@ -80,7 +83,8 @@ defmodule EventValidatorWeb.EventSchemaControllerTest do
       assert %{
                "id" => id,
                "name" => "some name",
-               "schema" => %{}
+               "schema" => %{},
+               "confirmed" => true
              } = json_response(conn, 200)["data"]
     end
 

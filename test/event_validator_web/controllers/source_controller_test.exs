@@ -71,6 +71,13 @@ defmodule EventValidatorWeb.SourceControllerTest do
         confirmed: true
       }
 
+      event_attrs_0 = %{
+        name: "some event",
+        schema: %{},
+        source_id: source.id,
+        confirmed: true
+      }
+
       event_attrs_1 = %{
         name: "some event 1",
         schema: %{},
@@ -78,6 +85,7 @@ defmodule EventValidatorWeb.SourceControllerTest do
         confirmed: true
       }
 
+      {:ok, _event_schema_0} = Events.create_event_schema(event_attrs_0)
       {:ok, event_schema} = Events.create_event_schema(event_attrs)
       {:ok, event_schema_1} = Events.create_event_schema(event_attrs_1)
 
@@ -90,14 +98,16 @@ defmodule EventValidatorWeb.SourceControllerTest do
                  "token" => source_token.token,
                  "events" => [
                    %{
-                     "id" => event_schema_1.id,
-                     "name" => "some event 1",
-                     "schema" => %{}
-                   },
-                   %{
                      "id" => event_schema.id,
                      "name" => "some event",
-                     "schema" => %{}
+                     "schema" => %{},
+                     "confirmed" => true
+                   },
+                   %{
+                     "id" => event_schema_1.id,
+                     "name" => "some event 1",
+                     "schema" => %{},
+                     "confirmed" => true
                    }
                  ]
                }

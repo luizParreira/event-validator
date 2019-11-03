@@ -2,7 +2,7 @@ defmodule EventValidatorWeb.ValidationsController do
   use EventValidatorWeb, :controller
 
   alias EventValidator.Accounts
-  alias EventValidator.{Reports, Validations}
+  alias EventValidator.Reports
 
   action_fallback EventValidatorWeb.FallbackController
 
