@@ -34,4 +34,8 @@ defmodule EventValidatorWeb.AuthController do
   defp handle_user_conn({:error, :unauthorized}, _conn) do
     {:error, :unauthorized}
   end
+
+  defp handle_user_conn({:error, _error}, _conn) do
+    {:error, :unauthorized}
+  end
 end

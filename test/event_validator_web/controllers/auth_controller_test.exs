@@ -37,6 +37,14 @@ defmodule EventValidatorWeb.AuthControllerTest do
 
       assert json_response(conn, 401)["errors"]["title"] == "UnauthorizedRequest"
     end
+
+    test "renders unauthorized when password invalid", %{conn: conn} do
+      user = fixture(:user)
+
+      conn = post(conn, "/auth/identity/callback", user: %{email: user.email, password: "wrong"})
+
+      assert json_response(conn, 401)["errors"]["title"] == "UnauthorizedRequest"
+    end
   end
 
   describe "bad request" do
