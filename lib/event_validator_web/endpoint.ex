@@ -41,7 +41,6 @@ defmodule EventValidatorWeb.Endpoint do
     key: "_event_validator_key",
     signing_salt: "xVdUwLMC"
 
-  plug CORSPlug, origin: "*"
-
+  plug CORSPlug
   plug EventValidatorWeb.Router
 end
