@@ -10,12 +10,24 @@ use Mix.Config
 # which you should run after static files are built and
 # before starting your production server.
 config :event_validator, EventValidatorWeb.Endpoint,
-  url: [host: "example.com", port: 80],
+  url: [scheme: "https", host: {:system, "HOST"}, port: 443],
+  force_ssl: [rewrite_on: [:x_forwarded_proto]],
   cache_static_manifest: "priv/static/cache_manifest.json"
 
 config :verk,
   queues: {:system, {EventValidator, :verk_queues, []}, "WORKERS_ENABLED"},
   redis_url: {:system, "REDIS_URL"}
+
+config :verk_web, :authorization,
+  username: {:system, "BASIC_AUTH_USERNAME"},
+  password: {:system, "BASIC_AUTH_PASSWORD"},
+  realm:    {:system, "BASIC_AUTH_REALM"}
+
+
+config :cors_plug,
+  origin: ["https://validata-front.herokuapp.com"],
+  max_age: 86400
+
 
 # Do not print debug messages in production
 config :logger, level: :info
