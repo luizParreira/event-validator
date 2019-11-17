@@ -15,7 +15,7 @@ defmodule EventValidator.Application do
       EventValidatorWeb.Endpoint,
       # Starts a worker by calling: EventValidator.Worker.start_link(arg)
       # {EventValidator.Worker, arg},
-      supervisor(Verk.Supervisor, [])
+      {Oban, Application.get_env(:event_validator, Oban)}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

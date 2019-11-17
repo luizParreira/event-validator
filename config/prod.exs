@@ -10,18 +10,10 @@ use Mix.Config
 # which you should run after static files are built and
 # before starting your production server.
 config :event_validator, EventValidatorWeb.Endpoint,
-  url: [scheme: "https", host: {:system, "HOST"}, port: 443],
+  http: [port: {:system, "PORT"}],
+  url: [scheme: "https", host: System.get_env("HOST"), port: 443],
   force_ssl: [rewrite_on: [:x_forwarded_proto]],
   cache_static_manifest: "priv/static/cache_manifest.json"
-
-config :verk,
-  queues: {:system, {EventValidator, :verk_queues, []}, "WORKERS_ENABLED"},
-  redis_url: {:system, "REDIS_URL"}
-
-config :verk_web, :authorization,
-  username: {:system, "BASIC_AUTH_USERNAME"},
-  password: {:system, "BASIC_AUTH_PASSWORD"},
-  realm:    {:system, "BASIC_AUTH_REALM"}
 
 
 config :cors_plug,

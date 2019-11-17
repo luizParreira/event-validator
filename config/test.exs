@@ -24,8 +24,6 @@ config :event_validator, EventValidator.Guardian,
   issuer: "validata",
   secret_key: "secret-key"
 
-config :verk,
-  queues: [],
-  redis_url: {:system, "REDIS_URL", "redis://redis:6379/2"}
+config :event_validator, Oban, queues: false, prune: :disabled
 
 config :event_validator, :project_auth, "secret-key"
