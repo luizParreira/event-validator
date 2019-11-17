@@ -22,10 +22,6 @@ config :event_validator, EventValidatorWeb.Endpoint,
   check_origin: false,
   watchers: []
 
-config :verk,
-  queues: [default: 10],
-  redis_url: {:system, "REDIS_URL", "redis://redis:6379/1"}
-
 config :cors_plug,
   origin: ["http://localhost:3000"]
 # ## SSL Support

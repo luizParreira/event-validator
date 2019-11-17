@@ -48,20 +48,16 @@ config :event_validator, EventValidatorWeb.Plug.Auth.AccessPipeline,
 
 config :event_validator, :project_auth, System.get_env("PROJECTS_SECRET_KEY")
 
-config :verk,
-  max_retry_count: 10,
-  poll_interval: {:system, :integer, "VERK_POLL_INTERVAL", 5000},
-  start_job_log_level: :info,
-  done_job_log_level: :info,
-  fail_job_log_level: :info,
-  node_id: {:system, "DYNO", "job.1"},
-  redis_url: {:system, "REDIS_URL", "redis://redis:6379"}
-
 config :event_validator, EventValidator.Mailer,
   adapter: Bamboo.SendGridAdapter,
   api_key: System.get_env("SENDGRID_API_KEY")
 
-config :verk_web, VerkWeb.Endpoint, url: [path: "/verk"]
+
+
+config :event_validator, Oban,
+  repo: EventValidator.Repo,
+  prune: {:maxlen, 100_000},
+  queues: [default: 10, events: 50, media: 20]
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

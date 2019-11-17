@@ -25,8 +25,6 @@ defmodule EventValidator.MixProject do
         :runtime_tools,
         :ueberauth,
         :ueberauth_identity,
-        :verk,
-        :verk_web
       ]
     ]
   end
@@ -54,8 +52,7 @@ defmodule EventValidator.MixProject do
       {:guardian, "~> 1.2"},
       {:ueberauth, "~> 0.6"},
       {:ueberauth_identity, "~> 0.2"},
-      {:verk, "~> 1.0"},
-      {:verk_web, "~> 1.0"},
+      {:oban, "~> 0.11"},
       {:ex_json_schema, "~> 0.6.2"},
       {:bamboo, "~> 1.3"}
     ]

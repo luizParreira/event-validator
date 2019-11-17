@@ -12,8 +12,6 @@ jobs: # basic units of work in a run
           POSTGRES_USER: postgres
           POSTGRES_DB: event_validator_test
           POSTGRES_PASSWORD: test
-      - image: redis
-        name: redis
 
     working_directory: ~/app # directory where steps will run
 
