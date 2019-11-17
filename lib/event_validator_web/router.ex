@@ -1,6 +1,5 @@
 defmodule EventValidatorWeb.Router do
   use EventValidatorWeb, :router
-  use VerkWeb.MountRoute, path: "/verk"
 
   pipeline :api do
     plug :accepts, ["json"]
