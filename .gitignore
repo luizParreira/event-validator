@@ -29,3 +29,4 @@ event_validator-*.tar
 
 
 .env
+.vscode
