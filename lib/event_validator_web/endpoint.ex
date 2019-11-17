@@ -1,6 +1,5 @@
 defmodule EventValidatorWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :event_validator
-  use VerkWeb.Mount, path: "/verk"
 
   socket "/socket", EventValidatorWeb.UserSocket,
     websocket: true,

@@ -1,5 +1,6 @@
 defmodule EventValidatorWeb.ValidateControllerTest do
   use EventValidatorWeb.ConnCase
+  use Oban.Testing, repo: EventValidator.Repo
 
   alias EventValidator.{Projects, Accounts, Events}
   alias Projects.Source
@@ -55,7 +56,6 @@ defmodule EventValidatorWeb.ValidateControllerTest do
   end
 
   setup %{conn: conn} do
-    Verk.Queue.clear("default")
     source = fixture(:source)
 
     {:ok,
@@ -71,11 +71,7 @@ defmodule EventValidatorWeb.ValidateControllerTest do
       conn = post(conn, "/validate", @params)
       assert conn.status == 204
 
-      {:ok, [%Verk.Job{class: "EventValidator.Validations.Worker", args: [id, params]}]} =
-        Verk.Queue.range("default")
-
-      assert id == source.id
-      assert params == @params
+      assert_enqueued worker: EventValidator.Validations.Worker, args: %{source_id: source.id, params: @params}
     end
 
     test "renders auth error when token invalid", %{conn: conn} do

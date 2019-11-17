@@ -4,13 +4,9 @@ defmodule EventValidatorWeb.ValidateController do
   action_fallback EventValidatorWeb.FallbackController
 
   def create(conn, _params) do
-    verk_job = %Verk.Job{
-      queue: :default,
-      class: "EventValidator.Validations.Worker",
-      args: [conn.assigns.source_id, conn.body_params]
-    }
-
-    {:ok, _} = Verk.enqueue(verk_job)
+  %{source_id: conn.assigns.source_id, params: conn.body_params}
+    |> EventValidator.Validations.Worker.new()
+    |> Oban.insert()
 
     send_resp(conn, :no_content, "")
   end
